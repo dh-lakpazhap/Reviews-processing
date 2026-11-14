@@ -1,64 +1,179 @@
-# Актуальные документы Reviews-processing
+# Reviews-processing
 
-Редакция 14.11.2026. Это комплект документов и доказательств, а не копия кода приложения. Код и модель остаются в репозитории https://github.com/dh-lakpazhap/Reviews-processing. Онлайн-демо: https://revprocess.streamlit.app/.
+Учебный MVP для анализа тональности отзывов об операторе связи. Приложение помогает предварительно отбирать негативные отзывы: пользователь загружает CSV, получает метки `negative`, `neutral` и `positive`, фильтрует результаты и скачивает их.
 
-Плановые сроки из последнего WBS и PDF ProjectLibre: 14.09–06.11.2026. Исторический запуск QA — 06.11, обсуждение ретроспективы по предоставленному PDF — 07.11, повторные независимые технические проверки — 14.11. Эти даты обозначают разные события.
+**[Открыть онлайн-демо](https://revprocess.streamlit.app/)**  
+Период проекта: **03.10–14.11.2026**.
 
-Начать с Attention.txt. В нём перечислены реальные ограничения и подтверждения, зависящие от команды. Приёмка внешним получателем не заменяется условием о состоявшихся внутренних встречах. Длительная ОПЭ не объявлена проведённой.
+## Возможности
 
-Форматы: DOCX — редактируемые документы; PDF — руководства для просмотра и исходный визуальный план; CSV — таблицы; POD — исходный проект ProjectLibre. Для руководств Word и PDF — два формата одной редакции. Презентация сохранена без изменения, замечания — в presentation/Review.txt.
+- Загрузка и проверка CSV.
+- Определение тональности каждого отзыва с помощью TF-IDF и Logistic Regression.
+- Просмотр всех результатов или только негативных отзывов.
+- Скачивание полного результата и отдельной негативной выборки.
+- Сохранение порядка строк и исходного текста в результате.
 
-## Опись
+Готовая модель включена в репозиторий. Для запуска приложения не нужны API-ключи, GPU и повторное обучение.
 
-| Папка | Файл |
+## Быстрая проверка онлайн
+
+1. Откройте [приложение](https://revprocess.streamlit.app/).
+2. Загрузите [test_data/valid.csv](test_data/valid.csv).
+3. Нажмите **«Анализировать»**.
+4. Проверьте результат: **20 отзывов, из них 10 negative**.
+5. Включите и выключите фильтр, скачайте оба CSV.
+
+При включённом фильтре кнопка **«Скачать все результаты»** сохраняет все 20 строк, а кнопка **«Скачать негативные отзывы»** — 10 строк.
+
+В онлайн-версии CSV передаётся серверу приложения. Для демонстрации используйте обезличенные данные, которые разрешено загружать.
+
+## Локальный запуск
+
+Требуется **Python 3.12**. Скачайте репозиторий и откройте его корневую папку в терминале.
+
+### Windows PowerShell
+
+```powershell
+py -3.12 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe -m streamlit run app.py
+```
+
+### macOS / Linux
+
+```bash
+python3.12 -m venv .venv
+.venv/bin/python -m pip install -r requirements.txt
+.venv/bin/python -m streamlit run app.py
+```
+
+Откройте адрес из терминала, обычно **http://localhost:8501**. Для остановки нажмите **Ctrl+C**.
+
+Версии backend, использованные при проверке 14.11.2026: Python 3.12.14, scikit-learn 1.8.0, pandas 2.2.3, joblib 1.5.3, NumPy 2.3.5. Полные сведения — в [environment.json](evidence/tests/environment.json). При проблемах совместимости модели установите эти версии в созданное окружение:
+
+```bash
+python -m pip install scikit-learn==1.8.0 pandas==2.2.3 joblib==1.5.3 numpy==2.3.5
+```
+
+Здесь `python` — интерпретатор созданного окружения: `.\.venv\Scripts\python.exe` в Windows или `.venv/bin/python` в macOS / Linux.
+
+## Формат данных
+
+Входной файл — CSV в кодировке **UTF-8**, допускается BOM, разделитель — **запятая**. Обязательный столбец — `text`; также поддерживается `content` для совместимости. Если присутствуют оба, используется `text`.
+
+```csv
+text
+"The mobile connection keeps dropping."
+"The service works well."
+```
+
+Ограничения входа:
+
+- от 1 до 1000 отзывов;
+- размер файла — до 5 000 000 байт;
+- длина отзыва после удаления пробелов по краям — от 1 до 5000 символов;
+- названия столбцов должны быть непустыми и уникальными;
+- пустые отзывы и повреждённые строки отклоняются.
+
+Дополнительные столбцы не включаются в результат. Выход содержит `row_id`, `text` и `sentiment`. CSV выгружается в UTF-8 с BOM. Пример структуры результата:
+
+```csv
+row_id,text,sentiment
+1,The mobile connection keeps dropping.,negative
+2,The service works well.,positive
+```
+
+## Структура репозитория
+
+Основные файлы и папки:
+
+```text
+Reviews-processing/
+├── README.md                         # Описание проекта и запуск
+├── QUICK_START.md                    # Краткая инструкция
+├── app.py                            # Интерфейс Streamlit
+├── core.py                           # Проверка CSV, прогноз и экспорт
+├── sentiment_model.joblib            # Готовая модель
+├── baseline.ipynb                    # Подготовка данных и ML-эксперименты
+├── requirements.txt                  # Зависимости приложения
+├── demo_reviews.csv                  # Пример входных данных
+├── datasets/                         # Исходный корпус отзывов
+├── scripts/
+│   └── evaluate_ml.py                # Повторная оценка готовой модели
+├── tests/
+│   ├── test_core.py                  # Проверки обработки CSV
+│   └── test_real_model.py            # Проверки с настоящей моделью
+├── test_data/                        # Валидные, ошибочные и граничные CSV
+├── docs/
+│   ├── 01_Project/                   # Паспорт и карта стейкхолдеров
+│   ├── 02_Requirements/              # Реестр требований и ТЗ
+│   ├── 03_Management/                # План, WBS, RACI, backlog, риски и решения
+│   │   ├── Reviews_processing_ProjectLibre.pod
+│   │   └── Reviews_processing_visual_plan_updated.pdf
+│   ├── 04_Testing/                   # Test Plan, Cases, Bug Log, Report, REQ/AC
+│   ├── 05_Guides/                    # User Guide, Runbook и Known Issues
+│   ├── 06_Acceptance/                # Handover, ПСИ, ОПЭ и ретроспектива
+│   └── 07_ML/                       # Карточка модели
+├── evidence/
+│   ├── tests/                        # Логи и результаты проверок
+│   ├── ml/                           # Точные ML-метрики и хеши
+│   ├── exports/                      # Проверенные выгрузки приложения
+│   └── handover/                     # Источники подтверждений передачи
+├── images/                           # Иллюстрации пользовательского сценария
+└── LICENSE                           # Лицензия кода
+```
+
+## Документация
+
+- [Техническое задание](docs/02_Requirements/Technical_Specification.docx).
+- [WBS и календарный план](docs/03_Management/Reviews_processing_visual_plan_updated.pdf), [исходник ProjectLibre](docs/03_Management/Reviews_processing_ProjectLibre.pod).
+- [Руководство пользователя](docs/05_Guides/User_Guide.pdf).
+- [Runbook: проверка работоспособности и типовые проблемы](docs/05_Guides/Runbook.pdf).
+- [Известные ограничения](docs/05_Guides/Known_Issues.pdf).
+- [Отчёт о тестировании](docs/04_Testing/Test_Report.docx).
+- [Протокол ПСИ](docs/06_Acceptance/PSI_Protocol.docx), [передача проекта](docs/06_Acceptance/Handover.docx), [ретроспектива](docs/06_Acceptance/Retrospective.docx).
+- [Карточка модели](docs/07_ML/Model_Card.docx).
+
+## Проверки
+
+Из корня репозитория выполните через Python созданного окружения:
+
+```bash
+python -m unittest discover -s tests -v
+python scripts/evaluate_ml.py
+```
+
+Ожидаемый результат автотестов — **20 успешных проверок**. ML-скрипт загружает сохранённую модель, восстанавливает разбиение исходного корпуса без обучения и сохраняет результат в `evidence/ml_test_evidence_rerun.json`.
+
+Результаты проверки 14.11.2026 находятся в [evidence/tests/](evidence/tests/). Пройден основной браузерный сценарий: загрузка корректного CSV, анализ, фильтр, обе выгрузки и ошибка отсутствующего столбца текста. Полный браузерный прогон всех граничных файлов и полный перезапуск UI не подтверждены этим прогоном.
+
+## Результаты модели
+
+Корпус: **Malaysian Telecommunication Google Play Reviews**, версия 1. Метки получены из звёздных оценок: 1–2 — negative, 3 — neutral, 4–5 — positive. Используется разбиение train / validation / test **70 / 15 / 15** с seed 42.
+
+Повторная оценка сохранённой модели от 14.11.2026:
+
+| Показатель | Результат |
 | --- | --- |
-| . | [Attention.txt](Attention.txt) |
-| . | [QUICK_START.md](QUICK_START.md) |
-| docs/01_Project | [Project_Passport.docx](docs/01_Project/Project_Passport.docx) |
-| docs/01_Project | [Stakeholder_Map.docx](docs/01_Project/Stakeholder_Map.docx) |
-| docs/02_Requirements | [Requirements_Register.docx](docs/02_Requirements/Requirements_Register.docx) |
-| docs/02_Requirements | [Technical_Specification.docx](docs/02_Requirements/Technical_Specification.docx) |
-| docs/03_Management | [Backlog.csv](docs/03_Management/Backlog.csv) |
-| docs/03_Management | [Decisions.docx](docs/03_Management/Decisions.docx) |
-| docs/03_Management | [Project_Plan.docx](docs/03_Management/Project_Plan.docx) |
-| docs/03_Management | [RACI.docx](docs/03_Management/RACI.docx) |
-| docs/03_Management | [Reviews_processing_plan.pod](docs/03_Management/Reviews_processing_plan.pod) |
-| docs/03_Management | [Reviews_processing_visual_plan.pdf](docs/03_Management/Reviews_processing_visual_plan.pdf) |
-| docs/03_Management | [Risks.docx](docs/03_Management/Risks.docx) |
-| docs/03_Management | [Team_Decisions.docx](docs/03_Management/Team_Decisions.docx) |
-| docs/03_Management | [WBS.csv](docs/03_Management/WBS.csv) |
-| docs/04_Testing | [Bug_Log.docx](docs/04_Testing/Bug_Log.docx) |
-| docs/04_Testing | [REQ_AC.csv](docs/04_Testing/REQ_AC.csv) |
-| docs/04_Testing | [REQ_AC.docx](docs/04_Testing/REQ_AC.docx) |
-| docs/04_Testing | [Test_Cases.docx](docs/04_Testing/Test_Cases.docx) |
-| docs/04_Testing | [Test_Plan.docx](docs/04_Testing/Test_Plan.docx) |
-| docs/04_Testing | [Test_Report.docx](docs/04_Testing/Test_Report.docx) |
-| docs/05_Guides | [Known_Issues.docx](docs/05_Guides/Known_Issues.docx) |
-| docs/05_Guides | [Known_Issues.pdf](docs/05_Guides/Known_Issues.pdf) |
-| docs/05_Guides | [Runbook.docx](docs/05_Guides/Runbook.docx) |
-| docs/05_Guides | [Runbook.pdf](docs/05_Guides/Runbook.pdf) |
-| docs/05_Guides | [User_Guide.docx](docs/05_Guides/User_Guide.docx) |
-| docs/05_Guides | [User_Guide.pdf](docs/05_Guides/User_Guide.pdf) |
-| docs/06_Acceptance | [Handover.docx](docs/06_Acceptance/Handover.docx) |
-| docs/06_Acceptance | [OPE_Plan.docx](docs/06_Acceptance/OPE_Plan.docx) |
-| docs/06_Acceptance | [PSI_Protocol.docx](docs/06_Acceptance/PSI_Protocol.docx) |
-| docs/06_Acceptance | [Retrospective.docx](docs/06_Acceptance/Retrospective.docx) |
-| docs/06_Acceptance | [Trial_Operation_Report.docx](docs/06_Acceptance/Trial_Operation_Report.docx) |
-| docs/07_ML | [Model_Card.docx](docs/07_ML/Model_Card.docx) |
-| evidence/exports | [all_predictions.csv](evidence/exports/all_predictions.csv) |
-| evidence/exports | [negative_reviews.csv](evidence/exports/negative_reviews.csv) |
-| evidence/handover | [Historical_launch.txt](evidence/handover/Historical_launch.txt) |
-| evidence/handover | [Retrospective_source.txt](evidence/handover/Retrospective_source.txt) |
-| evidence/ml | [ml_test_evidence.json](evidence/ml/ml_test_evidence.json) |
-| evidence/tests | [assembly_provenance.json](evidence/tests/assembly_provenance.json) |
-| evidence/tests | [browser_checks.md](evidence/tests/browser_checks.md) |
-| evidence/tests | [environment.json](evidence/tests/environment.json) |
-| evidence/tests | [functional_checks.json](evidence/tests/functional_checks.json) |
-| evidence/tests | [release_manifest.json](evidence/tests/release_manifest.json) |
-| evidence/tests | [unittest_2026-11-14.log](evidence/tests/unittest_2026-11-14.log) |
-| presentation | [Review.txt](presentation/Review.txt) |
-| presentation | [Reviews_Processing_Defense.pptx](presentation/Reviews_Processing_Defense.pptx) |
-| . | [requirements-backend-verified.txt](requirements-backend-verified.txt) |
-| . | [requirements-ml.txt](requirements-ml.txt) |
-| . | [requirements.txt](requirements.txt) |
-| scripts | [evaluate_ml.py](scripts/evaluate_ml.py) |
+| Размер test | 15 281 отзыв |
+| Отзывов negative в test | 9 867 |
+| TP negative | 9 355 |
+| FN negative | 512 |
+| Recall negative | 0,9481 — порог 0,85 достигнут |
+| Macro-F1 | 0,5801 — целевое значение 0,80 не достигнуто |
+
+Точные значения, матрица ошибок и хеши находятся в [ml_test_evidence.json](evidence/ml/ml_test_evidence.json). Пересчёт использует прежнее разбиение и не является проверкой на новой независимой выборке.
+
+## Ограничения
+
+- У модели низкое качество класса neutral: найдено 14 из 1003 отзывов этого класса в test.
+- Интерфейс ориентирован на английские отзывы, но отдельная оценка на английском сегменте отсутствует. Качество на новых языках и реальных обращениях не подтверждено.
+- Модель помогает предварительному отбору; итоговую оценку выполняет человек.
+- Экономия рабочего времени не измерялась; длительная опытная эксплуатация не подтверждена.
+- CRM-интеграция, автоматический сбор отзывов и промышленная эксплуатация не входят в текущий MVP.
+- Условия использования и распространения корпуса требуют документального подтверждения. Лицензия кода в `LICENSE` не определяет права на датасет.
+
+## Команда
+
+Мария Шубина — руководитель проекта; Валерия Бердникова — аналитик; Дан-Хайя Лакпажап — ML-разработчик / Tech Lead; Алия Латипова — QA.
+
