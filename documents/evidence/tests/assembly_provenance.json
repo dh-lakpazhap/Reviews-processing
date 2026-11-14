@@ -1,0 +1,34 @@
+{
+  "date": "2026-11-14",
+  "source_main": "44b65ef472cdcd6cb8140b1d3e193c574070ebcc",
+  "sources": [
+    "latest uploaded archive with saved model",
+    "main",
+    "Docxs",
+    "Handover_online_demo.docx",
+    "Reviews_Processing_Defense(1).pptx",
+    "independent assistant verification 2026-11-14"
+  ],
+  "user_authorized_assumption": "Meetings occurred, team members completed work according to roles; internal acceptance with remarks is scenario-based, not independently obtained signatures.",
+  "independently_observed": [
+    "20 unittest passed",
+    "local boundary/error CSV checks with saved real model",
+    "public browser smoke: valid, filter, two downloads, no_text",
+    "saved model evaluation on reconstructed baseline split"
+  ],
+  "not_independently_verified": [
+    "all boundary/error browser scenarios",
+    "full application restart",
+    "new team member installation of this assembled branch",
+    "long-running trial operation",
+    "business time savings",
+    "separate English test",
+    "dataset licensing",
+    "external teacher acceptance",
+    "native ProjectLibre .pod reopened in application",
+    "YouTrack board/export"
+  ],
+  "presentation": "original unchanged, reviewed text and all 11 slide renders",
+  "application_code": "unchanged",
+  "source_planning": "Latest uploaded WBS (1).csv and Docxs cbff10c ProjectLibre .pod and PDF; baseline 2026-09-14 to 2026-11-06; not actual execution dates"
+}

@@ -1,0 +1,11 @@
+{
+  "python": "3.12.14",
+  "scikit_learn": "1.8.0",
+  "pandas": "2.2.3",
+  "joblib": "1.5.3",
+  "numpy": "2.3.5",
+  "streamlit_local": "not installed or run for this verification",
+  "browser": "cloud Chrome, live public app",
+  "cloud_server_versions": "not independently read",
+  "date": "2026-11-14"
+}

@@ -1,0 +1,78 @@
+{
+  "date": "2026-11-14",
+  "method": "Reconstructed existing split from baseline code; loaded saved model, no fitting or tuning",
+  "split": {
+    "train": 71311,
+    "validation": 15281,
+    "test": 15281,
+    "seed": 42
+  },
+  "TP_negative": 9355,
+  "FN_negative": 512,
+  "negative_support": 9867,
+  "recall_negative": 0.9481098611533394,
+  "macro_f1": 0.5800906129482725,
+  "labels": [
+    "negative",
+    "neutral",
+    "positive"
+  ],
+  "confusion_matrix": [
+    [
+      9355,
+      11,
+      501
+    ],
+    [
+      740,
+      14,
+      249
+    ],
+    [
+      846,
+      20,
+      3545
+    ]
+  ],
+  "classification_report": {
+    "negative": {
+      "precision": 0.8550406726990221,
+      "recall": 0.9481098611533394,
+      "f1-score": 0.8991733948481353,
+      "support": 9867.0
+    },
+    "neutral": {
+      "precision": 0.3111111111111111,
+      "recall": 0.013958125623130608,
+      "f1-score": 0.026717557251908396,
+      "support": 1003.0
+    },
+    "positive": {
+      "precision": 0.8253783469150174,
+      "recall": 0.8036726365903423,
+      "f1-score": 0.8143808867447737,
+      "support": 4411.0
+    },
+    "accuracy": 0.8451017603559976,
+    "macro avg": {
+      "precision": 0.6638433769083836,
+      "recall": 0.5885802077889374,
+      "f1-score": 0.5800906129482725,
+      "support": 15281.0
+    },
+    "weighted avg": {
+      "precision": 0.8107764315298631,
+      "recall": 0.8451017603559976,
+      "f1-score": 0.8174318230692633,
+      "support": 15281.0
+    }
+  },
+  "model_sha256": "e95a88cf1a14837c1c7225b8abc10564642d1e58450cb54b51391c12b133b775",
+  "dataset_sha256": "3d743c59ec330b63e1c72b956cb73749464c82c0a80d4a63289a3046cc775201",
+  "test_text_keys_sha256": "5504a0863725d39c3af6c835a0af303032ee7b690a7698e2fcbf779afbd984bc",
+  "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "sklearn": "1.8.0",
+  "pandas": "2.2.3",
+  "numpy": "2.3.5",
+  "limitation": "Repeated evaluation of existing test; not a new independent sample. Historical per-row split manifest absent; reconstructed from source and data."
+}

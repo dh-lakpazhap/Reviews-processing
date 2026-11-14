@@ -1,187 +1,64 @@
-# Reviews-processing — анализ тональности отзывов
+# Актуальные документы Reviews-processing
 
-**Версия MVP: 0.1 (31.10.2026)** · **Интерфейс: Streamlit** · **Модель: TF-IDF + Logistic Regression**
+Редакция 14.11.2026. Это комплект документов и доказательств, а не копия кода приложения. Код и модель остаются в репозитории https://github.com/dh-lakpazhap/Reviews-processing. Онлайн-демо: https://revprocess.streamlit.app/.
 
-Учебное локальное приложение для классификации англоязычных отзывов о телеком-сервисах. Пользователь загружает CSV, получает метки тональности (`negative`, `neutral`, `positive`), может показать только негативные отзывы и скачать результаты.
+Плановые сроки из последнего WBS и PDF ProjectLibre: 14.09–06.11.2026. Исторический запуск QA — 06.11, обсуждение ретроспективы по предоставленному PDF — 07.11, повторные независимые технические проверки — 14.11. Эти даты обозначают разные события.
 
-> Для работы приложения **не нужно обучать модель заново**: подготовленный pipeline хранится в `sentiment_model.joblib`.
+Начать с Attention.txt. В нём перечислены реальные ограничения и подтверждения, зависящие от команды. Приёмка внешним получателем не заменяется условием о состоявшихся внутренних встречах. Длительная ОПЭ не объявлена проведённой.
 
-## Demo
+Форматы: DOCX — редактируемые документы; PDF — руководства для просмотра и исходный визуальный план; CSV — таблицы; POD — исходный проект ProjectLibre. Для руководств Word и PDF — два формата одной редакции. Презентация сохранена без изменения, замечания — в presentation/Review.txt.
 
-Открыть приложение: [Анализ тональности отзывов](https://revprocess.streamlit.app)
+## Опись
 
-Для первой проверки загрузите файл `test_data/valid.csv` из репозитория.
-
-
-
-## 1. Возможности MVP
-
-- Загрузка CSV-файла с отзывами и проверка его формата.
-- Присвоение каждому отзыву одной из трёх меток тональности.
-- Отображение общего количества отзывов и количества записей с меткой `negative`.
-- Просмотр общей таблицы и включение фильтра **«Показать только negative»**.
-- Скачивание результатов: все отзывы или только негативные.
-- Понятные сообщения об ошибках при некорректном входном файле.
-
-## 2. Что находится в репозитории
-
-| Файл / папка | Назначение |
+| Папка | Файл |
 | --- | --- |
-| `app.py` | Streamlit-интерфейс |
-| `core.py` | Проверка входного CSV и логика обработки |
-| `sentiment_model.joblib` | Сохранённая обученная модель вместе с TF-IDF |
-| `requirements.txt` | Зависимости Python |
-| `baseline.ipynb` | Обучение модели и результаты экспериментов |
-| `test_data/` | CSV-файлы для проверки обычных и ошибочных сценариев |
-| `tests/` | Автоматические тесты |
-| `demo_reviews.csv` | Дополнительный демонстрационный CSV |
-| `images/` | Скриншоты интерфейса для этой инструкции |
-| `QUICK_START.md` | Отдельное руководство по установке и запуску |
-
-## 3. Установка и запуск
-
-Пошаговая инструкция по подготовке окружения, установке зависимостей и запуску приложения на macOS и Windows вынесена в отдельный файл **[QUICK_START.md](QUICK_START.md)**.
-
-Если проект уже установлен, откройте Quick Start и воспользуйтесь разделом «Запустить приложение».
-
-## 4. Как пользоваться интерфейсом — инструкция со скриншотами
-
-Ниже показан **реальный интерфейс MVP** при обработке `test_data/valid.csv`.
-
-### Шаг 1. Открыть главный экран
-
-На стартовом экране отображаются название сервиса, требования к CSV и поле **«Загрузить CSV»**.
-
-![Стартовый экран приложения с областью загрузки CSV](images/01_main_screen.png)
-
-### Шаг 2. Загрузить файл с отзывами
-
-Нажмите **Upload** и выберите `test_data/valid.csv` из папки проекта. Название загруженного файла появится в области загрузки; ниже станет доступна кнопка **«Анализировать»**.
-
-![Выбран файл valid.csv, появилась кнопка «Анализировать»](images/02_csv_uploaded.png)
-
-### Шаг 3. Выполнить анализ
-
-Нажмите **«Анализировать»**. Приложение проверит CSV, применит обученную модель и покажет:
-
-- **Всего отзывов** — количество обработанных строк;
-- **Негативных** — количество строк с предсказанной меткой `negative`;
-- таблицу `row_id`, `text`, `sentiment`.
-
-В показанном запуске файла `test_data/valid.csv` обработано **20 отзывов**, из них **10 классифицированы как negative**. Это результат *данного демонстрационного файла*, а не универсальная характеристика модели.
-
-![Результаты классификации: всего 20 отзывов, 10 негативных, таблица предсказаний](images/03_analysis_results.png)
-
-### Шаг 4. Отфильтровать негативные отзывы
-
-Поставьте галочку **«Показать только negative»**. В таблице останутся только строки с меткой `negative`. Снимите галочку, чтобы снова увидеть все результаты.
-
-![Фильтр негативных отзывов включён](images/04_negative_filter.png)
-
-### Шаг 5. Скачать результаты
-
-Ниже таблицы расположены две кнопки:
-
-- **«Скачать все результаты»** — все обработанные отзывы и метки;
-- **«Скачать негативные отзывы»** — только записи с меткой `negative`.
-
-Если браузер запросит разрешение на скачивание файлов с `localhost`, разрешите загрузку. Название кнопки зависит от браузера.
-
-![Кнопки экспорта полного набора и негативных отзывов](images/05_download_buttons.png)
-
-### Шаг 6. Открыть выгруженный CSV
-
-После скачивания можно открыть `all_predictions.csv` в программе для таблиц. В файле находятся столбцы:
-
-| `row_id` | `text` | `sentiment` |
-| --- | --- | --- |
-| `1` | `The app works perfectly and is easy to use.` | `positive` |
-| `2` | `I cannot log in after the update. Very bad app.` | `negative` |
-
-Это фрагмент **фактического результата**, показанного на скриншоте, а не эталон качества классификации.
-
-![Открытый файл all_predictions.csv с полями row_id, text и sentiment](images/06_exported_csv.png)
-
-## 5. Входные данные и ограничения
-
-Ожидается CSV с заголовками и следующими параметрами:
-
-| Параметр | Требование |
-| --- | --- |
-| Кодировка | UTF-8 или UTF-8 BOM |
-| Разделитель | Запятая |
-| Основной столбец | `text` |
-| Совместимость с baseline | Поддерживается `content`; если есть оба столбца, используется `text` |
-| Число отзывов | От 1 до 1000 |
-| Размер файла | Не более 5 000 000 байт |
-| Длина одного отзыва | Не более 5000 символов после удаления пробелов по краям |
-| Пустые отзывы | Не допускаются |
-
-Пример `reviews.csv`:
-
-```csv
-text
-The app works perfectly and is easy to use.
-I cannot log in after the update. Very bad app.
-The payment failed and my money is missing.
-```
-
-При выгрузке сохраняются порядок записей и исходный текст. Выходные поля: `row_id`, `text`, `sentiment`. Выгрузки создаются в UTF-8 BOM, чтобы их было удобно открывать в Excel. Если негативных отзывов нет, файл с негативными отзывами содержит заголовки и ноль строк.
-
-> Надпись **«200MB per file»** у стандартного загрузчика Streamlit на скриншоте — это интерфейсное ограничение самого загрузчика. **Реальный лимит MVP — 5 МБ**, как указано выше.
-
-## 6. Автоматические проверки
-
-Из корневой папки проекта:
-
-**macOS:**
-
-```bash
-.venv/bin/python -m unittest discover -s tests -v
-```
-
-**Windows:**
-
-```powershell
-.\.venv\Scripts\python.exe -m unittest discover -s tests -v
-```
-
-В исходной документации зафиксированы **14 автоматических проверок логики**. Материалы проверки в учебном комплекте: `../03_Evidence/core_test_evidence.txt` и `../03_Evidence/ui_smoke_evidence.txt`, если эта структура папок сохранена при передаче. UI-smoke проводился на временной тестовой модели; он не подтверждает качество ML-модели.
-
-Пользовательские сценарии приёмки описаны в `../01_Documents/02_Test_Cases.docx`, а статус — в `../01_Documents/04_Test_Report.docx` (если документы передаются вместе с комплектом). Проверки на настоящей модели дополнительно описаны в файлах `test_real_model.py` и `06_Real_Model_Checks.json` в материалах команды.
-
-По сообщению команды, **другой участник уже смог самостоятельно запустить приложение по README**. Этот факт подтверждает воспроизводимость запуска, но не заменяет полный Test Report.
-
-## 7. ML-модель и известные ограничения
-
-Модель — сохранённый pipeline **TF-IDF + Logistic Regression**. Она предсказывает `negative`, `neutral` или `positive`.
-
-По сохранённым результатам baseline (эти показатели здесь не пересчитывались):
-
-| Метрика | Значение |
-| --- | ---: |
-| Recall negative | 0.948 |
-| Macro-F1 | 0.580 |
-| Recall neutral | 0.014 |
-
-- Критерий `Recall negative ≥ 0.85` оценивался отдельно на тестовой выборке, а не по 20 демонстрационным отзывам.
-- **Класс `neutral` распознаётся плохо** — это известное ограничение проекта.
-- Обучающие метки получены из звёздных оценок и могут содержать ошибки разметки.
-- Данные обучения многоязычные; отдельное качество на английском сегменте не подтверждено.
-- Модель предназначена для учебного MVP; пригодность к промышленному использованию и качество на новых реальных обращениях не подтверждены.
-
-В материалах команды `EXPORT_CELL.txt` описывает пересчёт Recall negative, TP, FN, Macro-F1 и матрицы ошибок на `test_df`, с сохранением `ml_test_evidence.json`. Повторный анализ той же test-выборки не делает её новой независимой выборкой.
-
-## 8. Если возникла проблема
-
-| Проблема | Что проверить |
-| --- | --- |
-| `.venv/bin/python: no such file or directory` | Создайте окружение командой из шага 3.2 |
-| `No module named ...` | Установите зависимости через Python из `.venv` |
-| `sentiment_model.joblib` не найден | Убедитесь, что файл находится рядом с `app.py` |
-| Ошибка чтения CSV | Проверьте UTF-8, запятую как разделитель и наличие заголовков |
-| Нет `text` или `content` | Добавьте столбец `text` либо используйте поддерживаемый `content` |
-| Файл превышает лимиты | Уменьшите файл до 5 МБ, не более 1000 строк и 5000 символов на отзыв |
-| Страница не открывается | Проверьте, что Streamlit ещё работает, и откройте `Local URL` из терминала |
-| Браузер не скачивает файл | Проверьте настройки скачивания; при запросе разрешите загрузки с `localhost` |
-| Ошибка загрузки модели | Сверьте версии Python и библиотек с окружением, где модель была сохранена |
+| . | [Attention.txt](Attention.txt) |
+| . | [QUICK_START.md](QUICK_START.md) |
+| docs/01_Project | [Project_Passport.docx](docs/01_Project/Project_Passport.docx) |
+| docs/01_Project | [Stakeholder_Map.docx](docs/01_Project/Stakeholder_Map.docx) |
+| docs/02_Requirements | [Requirements_Register.docx](docs/02_Requirements/Requirements_Register.docx) |
+| docs/02_Requirements | [Technical_Specification.docx](docs/02_Requirements/Technical_Specification.docx) |
+| docs/03_Management | [Backlog.csv](docs/03_Management/Backlog.csv) |
+| docs/03_Management | [Decisions.docx](docs/03_Management/Decisions.docx) |
+| docs/03_Management | [Project_Plan.docx](docs/03_Management/Project_Plan.docx) |
+| docs/03_Management | [RACI.docx](docs/03_Management/RACI.docx) |
+| docs/03_Management | [Reviews_processing_plan.pod](docs/03_Management/Reviews_processing_plan.pod) |
+| docs/03_Management | [Reviews_processing_visual_plan.pdf](docs/03_Management/Reviews_processing_visual_plan.pdf) |
+| docs/03_Management | [Risks.docx](docs/03_Management/Risks.docx) |
+| docs/03_Management | [Team_Decisions.docx](docs/03_Management/Team_Decisions.docx) |
+| docs/03_Management | [WBS.csv](docs/03_Management/WBS.csv) |
+| docs/04_Testing | [Bug_Log.docx](docs/04_Testing/Bug_Log.docx) |
+| docs/04_Testing | [REQ_AC.csv](docs/04_Testing/REQ_AC.csv) |
+| docs/04_Testing | [REQ_AC.docx](docs/04_Testing/REQ_AC.docx) |
+| docs/04_Testing | [Test_Cases.docx](docs/04_Testing/Test_Cases.docx) |
+| docs/04_Testing | [Test_Plan.docx](docs/04_Testing/Test_Plan.docx) |
+| docs/04_Testing | [Test_Report.docx](docs/04_Testing/Test_Report.docx) |
+| docs/05_Guides | [Known_Issues.docx](docs/05_Guides/Known_Issues.docx) |
+| docs/05_Guides | [Known_Issues.pdf](docs/05_Guides/Known_Issues.pdf) |
+| docs/05_Guides | [Runbook.docx](docs/05_Guides/Runbook.docx) |
+| docs/05_Guides | [Runbook.pdf](docs/05_Guides/Runbook.pdf) |
+| docs/05_Guides | [User_Guide.docx](docs/05_Guides/User_Guide.docx) |
+| docs/05_Guides | [User_Guide.pdf](docs/05_Guides/User_Guide.pdf) |
+| docs/06_Acceptance | [Handover.docx](docs/06_Acceptance/Handover.docx) |
+| docs/06_Acceptance | [OPE_Plan.docx](docs/06_Acceptance/OPE_Plan.docx) |
+| docs/06_Acceptance | [PSI_Protocol.docx](docs/06_Acceptance/PSI_Protocol.docx) |
+| docs/06_Acceptance | [Retrospective.docx](docs/06_Acceptance/Retrospective.docx) |
+| docs/06_Acceptance | [Trial_Operation_Report.docx](docs/06_Acceptance/Trial_Operation_Report.docx) |
+| docs/07_ML | [Model_Card.docx](docs/07_ML/Model_Card.docx) |
+| evidence/exports | [all_predictions.csv](evidence/exports/all_predictions.csv) |
+| evidence/exports | [negative_reviews.csv](evidence/exports/negative_reviews.csv) |
+| evidence/handover | [Historical_launch.txt](evidence/handover/Historical_launch.txt) |
+| evidence/handover | [Retrospective_source.txt](evidence/handover/Retrospective_source.txt) |
+| evidence/ml | [ml_test_evidence.json](evidence/ml/ml_test_evidence.json) |
+| evidence/tests | [assembly_provenance.json](evidence/tests/assembly_provenance.json) |
+| evidence/tests | [browser_checks.md](evidence/tests/browser_checks.md) |
+| evidence/tests | [environment.json](evidence/tests/environment.json) |
+| evidence/tests | [functional_checks.json](evidence/tests/functional_checks.json) |
+| evidence/tests | [release_manifest.json](evidence/tests/release_manifest.json) |
+| evidence/tests | [unittest_2026-11-14.log](evidence/tests/unittest_2026-11-14.log) |
+| presentation | [Review.txt](presentation/Review.txt) |
+| presentation | [Reviews_Processing_Defense.pptx](presentation/Reviews_Processing_Defense.pptx) |
+| . | [requirements-backend-verified.txt](requirements-backend-verified.txt) |
+| . | [requirements-ml.txt](requirements-ml.txt) |
+| . | [requirements.txt](requirements.txt) |
+| scripts | [evaluate_ml.py](scripts/evaluate_ml.py) |

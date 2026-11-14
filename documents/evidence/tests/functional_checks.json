@@ -1,0 +1,85 @@
+[
+  {
+    "file": "one_row.csv",
+    "passed": true,
+    "actual": "Accepted 1 rows",
+    "method": "local core with saved real model, not browser"
+  },
+  {
+    "file": "1000_rows.csv",
+    "passed": true,
+    "actual": "Accepted 1000 rows",
+    "method": "local core with saved real model, not browser"
+  },
+  {
+    "file": "1001_rows.csv",
+    "passed": true,
+    "actual": "Допускается не более 1000 отзывов.",
+    "method": "local core with saved real model, not browser"
+  },
+  {
+    "file": "5000_chars.csv",
+    "passed": true,
+    "actual": "Accepted 1 rows",
+    "method": "local core with saved real model, not browser"
+  },
+  {
+    "file": "5001_chars.csv",
+    "passed": true,
+    "actual": "Отзыв не должен превышать 5000 символов.",
+    "method": "local core with saved real model, not browser"
+  },
+  {
+    "file": "bad_encoding.csv",
+    "passed": true,
+    "actual": "Нужен CSV в кодировке UTF-8.",
+    "method": "local core with saved real model, not browser"
+  },
+  {
+    "file": "broken.csv",
+    "passed": true,
+    "actual": "CSV повреждён: проверьте кавычки и разделители.",
+    "method": "local core with saved real model, not browser"
+  },
+  {
+    "file": "empty.csv",
+    "passed": true,
+    "actual": "CSV пуст.",
+    "method": "local core with saved real model, not browser"
+  },
+  {
+    "file": "empty_row.csv",
+    "passed": true,
+    "actual": "Есть пустые отзывы. Заполните или удалите их.",
+    "method": "local core with saved real model, not browser"
+  },
+  {
+    "file": "no_text.csv",
+    "passed": true,
+    "actual": "В CSV нужен столбец text (также поддерживается content).",
+    "method": "local core with saved real model, not browser"
+  },
+  {
+    "file": "over_5mb.csv",
+    "passed": true,
+    "actual": "Размер CSV превышает 5 МБ (5 000 000 байт).",
+    "method": "local core with saved real model, not browser"
+  },
+  {
+    "check": "repeat after model reload",
+    "passed": true,
+    "method": "local reload; not full app restart"
+  },
+  {
+    "check": "cloud download all_predictions.csv",
+    "passed": true,
+    "rows": 20,
+    "method": "browser download compared with local real-model output"
+  },
+  {
+    "check": "cloud download negative_reviews.csv",
+    "passed": true,
+    "rows": 10,
+    "method": "browser download compared with local real-model output"
+  }
+]

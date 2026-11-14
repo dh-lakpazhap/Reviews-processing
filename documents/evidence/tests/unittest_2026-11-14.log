@@ -1,0 +1,25 @@
+test_1000_rows (test_core.CoreTests.test_1000_rows) ... ok
+test_1001_rows (test_core.CoreTests.test_1001_rows) ... ok
+test_5000_characters (test_core.CoreTests.test_5000_characters) ... ok
+test_5001_characters (test_core.CoreTests.test_5001_characters) ... ok
+test_5mb_boundary (test_core.CoreTests.test_5mb_boundary) ... ok
+test_broken_csv (test_core.CoreTests.test_broken_csv) ... ok
+test_content_alias (test_core.CoreTests.test_content_alias) ... ok
+test_empty_file (test_core.CoreTests.test_empty_file) ... ok
+test_empty_review (test_core.CoreTests.test_empty_review) ... ok
+test_filter_and_export (test_core.CoreTests.test_filter_and_export) ... ok
+test_invalid_encoding (test_core.CoreTests.test_invalid_encoding) ... ok
+test_missing_column (test_core.CoreTests.test_missing_column) ... ok
+test_over_5mb (test_core.CoreTests.test_over_5mb) ... ok
+test_valid_order_and_labels (test_core.CoreTests.test_valid_order_and_labels) ... ok
+test_TC01_20_rows (test_real_model.RealModelTests.test_TC01_20_rows) ... ok
+test_TC02_filter (test_real_model.RealModelTests.test_TC02_filter) ... ok
+test_TC03_missing_text (test_real_model.RealModelTests.test_TC03_missing_text) ... ok
+test_TC04_empty_review (test_real_model.RealModelTests.test_TC04_empty_review) ... ok
+test_TC05_1000_rows (test_real_model.RealModelTests.test_TC05_1000_rows) ... ok
+test_TC06_1001_rows (test_real_model.RealModelTests.test_TC06_1001_rows) ... ok
+
+----------------------------------------------------------------------
+Ran 20 tests in 0.951s
+
+OK

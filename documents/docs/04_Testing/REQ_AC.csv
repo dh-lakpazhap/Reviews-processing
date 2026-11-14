@@ -1,0 +1,9 @@
+﻿REQ,Приоритет,Статус,Кейсы,Evidence
+R1,Must,Подтверждено в указанном объёме,TC-01;TC-04–09,unittest;functional_checks;browser_checks
+R2,Must,Подтверждено; UI restart не покрыт независимо,TC-01;TC-11,unittest;functional_checks
+R3,Must,Passed browser,TC-02,browser_checks
+R4,Must,Passed 0.948109861,TC-10,ml_test_evidence.json
+R5,Should,Not met 0.580090613,TC-10,ml_test_evidence.json
+R6,Should,Passed browser and content check,TC-03,browser exports;functional_checks
+R7,Could,Deferred,Не в текущем выпуске,app.py
+R8,Won’t now,Out of scope respected,ТЗ,app.py;ТЗ

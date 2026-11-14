@@ -1,0 +1,13 @@
+{
+  "source_commit": "44b65ef472cdcd6cb8140b1d3e193c574070ebcc",
+  "date": "2026-11-14",
+  "sha256": {
+    "app.py": "213e5df3e6d54a4a6a6d3538ba0abb1ee2c2d67c3c6c005b8af0b932a5bb0433",
+    "core.py": "9ca721f0589f36239274b287d58995f694a5b4f431ddc7f1f335537064ab7463",
+    "sentiment_model.joblib": "e95a88cf1a14837c1c7225b8abc10564642d1e58450cb54b51391c12b133b775",
+    "requirements.txt": "023515102d218e46611f8c582c2e04a031530fda1d46ebe26df58e11aa752e7e",
+    "tests/test_core.py": "96007a16eb045bc2c4f8e33486c83c9877e63d2a94a0b018f73a4f3bf9e082be",
+    "tests/test_real_model.py": "cad3cadb8bf619f5586c4f80a372df29eb55aa20c6c3fefc443a22731e8af670"
+  },
+  "note": "Source code/model unchanged in documentation PR; final PR commit differs from source_commit."
+}
